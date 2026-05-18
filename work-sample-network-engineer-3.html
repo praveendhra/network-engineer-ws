@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Praveendhra Rajkumar, Network Engineer 3 Work Sample | BMC</title>
+  <style>
+    :root {
+      --teal-900: #0d3d3a;
+      --teal-800: #0f4f4b;
+      --teal-700: #136560;
+      --teal-600: #178078;
+      --teal-500: #1a9e94;
+      --teal-400: #21bdb1;
+      --teal-300: #4dd4ca;
+      --teal-200: #99e8e3;
+      --teal-100: #d0f5f3;
+      --teal-50:  #f0fbfb;
+      --dark:     #0a2826;
+      --text:     #1a2e2d;
+      --muted:    #4a6e6b;
+      --border:   #b2deda;
+      --white:    #ffffff;
+      --warn-red: #c0392b;
+      --warn-orange: #d35400;
+      --warn-yellow: #d4ac0d;
+      --pass-green: #1a7a4a;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--teal-50);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    /* ── SIDEBAR NAV ── */
+    #sidebar {
+      position: fixed;
+      top: 0; left: 0;
+      width: 260px;
+      height: 100vh;
+      background: var(--teal-900);
+      overflow-y: auto;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 2rem;
+    }
+
+    #sidebar .logo {
+      padding: 1.6rem 1.4rem 1.2rem;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    #sidebar .logo h2 {
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--teal-300);
+      margin-bottom: 0.3rem;
+    }
+    #sidebar .logo p {
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.45);
+    }
+
+    #sidebar nav { padding: 1rem 0; }
+    #sidebar nav a {
+      display: block;
+      padding: 0.52rem 1.4rem;
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.65);
+      text-decoration: none;
+      border-left: 3px solid transparent;
+      transition: all 0.18s;
+    }
+    #sidebar nav a:hover,
+    #sidebar nav a.active {
+      color: var(--teal-300);
+      border-left-color: var(--teal-400);
+      background: rgba(255,255,255,0.04);
+    }
+    #sidebar nav .nav-section {
+      padding: 1.1rem 1.4rem 0.3rem;
+      font-size: 0.65rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.28);
+    }
+
+    /* ── MAIN CONTENT ── */
+    #main {
+      margin-left: 260px;
+      min-height: 100vh;
+    }
+
+    /* ── HERO ── */
+    #hero {
+      background: linear-gradient(135deg, var(--teal-800) 0%, var(--teal-600) 60%, var(--teal-400) 100%);
+      color: white;
+      padding: 3.5rem 3rem 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+    #hero::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 320px; height: 320px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.05);
+    }
+    #hero::after {
+      content: '';
+      position: absolute;
+      bottom: -80px; right: 120px;
+      width: 200px; height: 200px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.04);
+    }
+    #hero .badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 20px;
+      padding: 0.25rem 0.9rem;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    #hero h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 0.6rem;
+    }
+    #hero .subtitle {
+      font-size: 1rem;
+      opacity: 0.8;
+      margin-bottom: 1.8rem;
+    }
+    .meta-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+    .meta-item { font-size: 0.82rem; opacity: 0.85; }
+    .meta-item strong { display: block; font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.65; margin-bottom: 0.1rem; }
+
+    /* ── STAT CARDS ── */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      background: var(--teal-800);
+      border-bottom: 3px solid var(--teal-500);
+    }
+    .stat-card {
+      padding: 1.4rem 2rem;
+      text-align: center;
+      border-right: 1px solid rgba(255,255,255,0.08);
+      color: white;
+    }
+    .stat-card:last-child { border-right: none; }
+    .stat-card .val {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--teal-300);
+      line-height: 1;
+    }
+    .stat-card .lbl {
+      font-size: 0.72rem;
+      opacity: 0.6;
+      margin-top: 0.3rem;
+      letter-spacing: 0.06em;
+    }
+
+    /* ── CONTENT SECTIONS ── */
+    .content { padding: 2.5rem 3rem; max-width: 1100px; }
+
+    section { margin-bottom: 3rem; scroll-margin-top: 1.5rem; }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.4rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid var(--teal-200);
+    }
+    .section-number {
+      background: var(--teal-600);
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 700;
+      width: 2rem; height: 2rem;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .section-header h2 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--teal-800);
+    }
+
+    h3 {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--teal-700);
+      margin: 1.4rem 0 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    p { margin-bottom: 0.8rem; font-size: 0.9rem; }
+
+    ul, ol { padding-left: 1.4rem; margin-bottom: 0.8rem; }
+    li { font-size: 0.9rem; margin-bottom: 0.3rem; }
+    li strong { color: var(--teal-700); }
+
+    /* ── CALLOUT ── */
+    .callout {
+      background: var(--teal-100);
+      border-left: 4px solid var(--teal-500);
+      border-radius: 0 8px 8px 0;
+      padding: 1rem 1.2rem;
+      margin: 1rem 0;
+      font-size: 0.88rem;
+    }
+    .callout strong { color: var(--teal-700); }
+
+    /* ── TABLES ── */
+    .table-wrap { overflow-x: auto; margin: 1rem 0 1.4rem; border-radius: 10px; border: 1px solid var(--border); }
+    table { width: 100%; border-collapse: collapse; font-size: 0.83rem; }
+    thead tr { background: var(--teal-700); color: white; }
+    thead th { padding: 0.75rem 1rem; text-align: left; font-weight: 600; font-size: 0.78rem; letter-spacing: 0.04em; }
+    tbody tr { border-bottom: 1px solid var(--border); transition: background 0.12s; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--teal-50); }
+    tbody td { padding: 0.65rem 1rem; vertical-align: top; }
+
+    /* Risk badges */
+    .badge-critical { background: #fde8e8; color: #922b21; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.72rem; font-weight: 700; }
+    .badge-high     { background: #fef3e2; color: #784212; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.72rem; font-weight: 700; }
+    .badge-medium   { background: #fdfbe7; color: #6d5108; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.72rem; font-weight: 700; }
+    .badge-pass     { background: #e9f7ef; color: #1e8449; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.72rem; font-weight: 700; }
+
+    /* ── CODE BLOCKS ── */
+    pre {
+      background: var(--dark);
+      color: #a8e6e2;
+      border-radius: 10px;
+      padding: 1.2rem 1.4rem;
+      overflow-x: auto;
+      font-size: 0.78rem;
+      line-height: 1.65;
+      margin: 0.8rem 0 1.2rem;
+      border: 1px solid rgba(29,185,171,0.2);
+    }
+    code { font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace; }
+    pre code { color: inherit; }
+    .kw { color: #78dbd4; }
+    .cm { color: #5a8a87; font-style: italic; }
+    .str { color: #b5e8a0; }
+
+    /* ── TOPOLOGY BOX ── */
+    .topology {
+      background: var(--dark);
+      color: #4dd4ca;
+      border-radius: 10px;
+      padding: 1.4rem 1.6rem;
+      font-family: 'JetBrains Mono', 'Courier New', monospace;
+      font-size: 0.8rem;
+      line-height: 1.8;
+      border: 1px solid rgba(29,185,171,0.2);
+      margin: 0.8rem 0 1.2rem;
+      overflow-x: auto;
+    }
+    .topology .node { color: #99e8e3; font-weight: 600; }
+    .topology .comment { color: #4a7a77; font-style: italic; }
+
+    /* ── CHECKLIST ── */
+    .checklist { list-style: none; padding: 0; margin: 0.8rem 0; }
+    .checklist li {
+      display: flex; align-items: flex-start; gap: 0.6rem;
+      padding: 0.4rem 0;
+      border-bottom: 1px dashed var(--border);
+      font-size: 0.88rem;
+    }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist li::before {
+      content: '';
+      display: inline-block;
+      width: 13px; height: 13px;
+      border: 2px solid var(--teal-500);
+      border-radius: 3px;
+      background: white;
+      flex-shrink: 0;
+      margin-top: 0.2rem;
+    }
+
+    /* ── STEPS ── */
+    .steps { list-style: none; padding: 0; counter-reset: step; margin: 0.8rem 0; }
+    .steps li {
+      counter-increment: step;
+      display: flex; gap: 1rem;
+      margin-bottom: 0.7rem;
+      font-size: 0.88rem;
+      align-items: flex-start;
+    }
+    .steps li::before {
+      content: counter(step);
+      background: var(--teal-600);
+      color: white;
+      min-width: 1.6rem; height: 1.6rem;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.72rem; font-weight: 700;
+      flex-shrink: 0; margin-top: 0.1rem;
+    }
+
+    /* ── TIMELINE ── */
+    .timeline { position: relative; padding-left: 1.8rem; margin: 1rem 0; }
+    .timeline::before {
+      content: '';
+      position: absolute; left: 0.4rem; top: 0.5rem; bottom: 0;
+      width: 2px; background: var(--teal-300);
+    }
+    .tl-item {
+      position: relative;
+      margin-bottom: 1rem;
+      font-size: 0.86rem;
+    }
+    .tl-item::before {
+      content: '';
+      position: absolute;
+      left: -1.65rem; top: 0.3rem;
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--teal-500);
+      border: 2px solid var(--teal-200);
+    }
+    .tl-time {
+      font-size: 0.73rem;
+      font-weight: 700;
+      color: var(--teal-600);
+      font-family: monospace;
+      display: inline-block;
+      margin-right: 0.5rem;
+    }
+
+    /* ── OUTCOME CARDS ── */
+    .outcomes {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+    .outcome-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-top: 3px solid var(--teal-500);
+      border-radius: 10px;
+      padding: 1.2rem;
+      text-align: center;
+    }
+    .outcome-card .arrow { font-size: 1.4rem; color: var(--teal-500); margin-bottom: 0.3rem; }
+    .outcome-card .metric { font-size: 1.5rem; font-weight: 800; color: var(--teal-700); }
+    .outcome-card .desc { font-size: 0.75rem; color: var(--muted); margin-top: 0.2rem; }
+
+    /* ── STANDOUT GRID ── */
+    .standout-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+    .standout-item {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.1rem 1.3rem;
+    }
+    .standout-item .icon { font-size: 1.4rem; margin-bottom: 0.4rem; }
+    .standout-item h4 { font-size: 0.85rem; font-weight: 700; color: var(--teal-700); margin-bottom: 0.3rem; }
+    .standout-item p { font-size: 0.8rem; color: var(--muted); margin: 0; }
+
+    /* ── PROFILE / BIO ── */
+    .profile-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.6rem;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 1.4rem;
+      align-items: start;
+      margin-bottom: 1.4rem;
+    }
+    .profile-avatar {
+      width: 64px; height: 64px;
+      background: linear-gradient(135deg, var(--teal-600), var(--teal-400));
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem; font-weight: 800; color: white;
+      flex-shrink: 0;
+    }
+    .profile-info h3 { font-size: 1.1rem; font-weight: 700; color: var(--teal-800); margin-bottom: 0.2rem; text-transform: none; letter-spacing: 0; }
+    .profile-info .title-tag { font-size: 0.8rem; color: var(--teal-600); font-weight: 600; margin-bottom: 0.6rem; }
+    .profile-contacts { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-bottom: 0.8rem; }
+    .profile-contacts span { font-size: 0.78rem; color: var(--muted); }
+    .profile-contacts span::before { margin-right: 0.3rem; }
+    .skill-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .skill-tag {
+      background: var(--teal-100);
+      color: var(--teal-800);
+      border: 1px solid var(--teal-200);
+      border-radius: 20px;
+      padding: 0.18rem 0.65rem;
+      font-size: 0.72rem;
+      font-weight: 600;
+    }
+    .skill-tag.highlight {
+      background: var(--teal-600);
+      color: white;
+      border-color: var(--teal-600);
+    }
+    .exp-bridge {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+    .exp-bridge-item {
+      background: white;
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--teal-500);
+      border-radius: 0 10px 10px 0;
+      padding: 1rem 1.2rem;
+    }
+    .exp-bridge-item .role-label {
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--teal-500);
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+    .exp-bridge-item h4 {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.3rem;
+    }
+    .exp-bridge-item p {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin: 0;
+    }
+    .exp-bridge-item .arrow-bridge {
+      display: inline-block;
+      font-size: 0.72rem;
+      color: var(--teal-600);
+      font-weight: 700;
+      margin-top: 0.4rem;
+    }
+    @media (max-width: 900px) {
+      .exp-bridge { grid-template-columns: 1fr; }
+      .profile-card { grid-template-columns: 1fr; }
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--teal-900);
+      color: rgba(255,255,255,0.45);
+      text-align: center;
+      padding: 1.5rem;
+      font-size: 0.75rem;
+      margin-top: 2rem;
+    }
+
+    /* ── SCROLLBAR ── */
+    #sidebar::-webkit-scrollbar { width: 4px; }
+    #sidebar::-webkit-scrollbar-track { background: transparent; }
+    #sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 4px; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      #sidebar { display: none; }
+      #main { margin-left: 0; }
+      .content { padding: 1.5rem; }
+      .outcomes { grid-template-columns: 1fr 1fr; }
+      .standout-grid { grid-template-columns: 1fr; }
+      .stats-bar { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ SIDEBAR ══ -->
+<nav id="sidebar">
+  <div class="logo">
+    <h2>Praveendhra Rajkumar</h2>
+    <p>Network Engineer 3 · BMC Work Sample</p>
+  </div>
+  <nav>
+    <div class="nav-section">Overview</div>
+    <a href="#executive-summary">Executive Summary</a>
+    <a href="#scenario">Scenario</a>
+
+    <div class="nav-section">Technical Design</div>
+    <a href="#current-state">1 · Current State</a>
+    <a href="#proposed-arch">2 · Proposed Architecture</a>
+    <a href="#security">3 · Security (Palo Alto)</a>
+    <a href="#sdwan">4 · SD-WAN (Silver Peak)</a>
+    <a href="#wireless">5 · Wireless (Aruba Wi-Fi 6)</a>
+
+    <div class="nav-section">Operations</div>
+    <a href="#monitoring">6 · Monitoring (SolarWinds)</a>
+    <a href="#change-mgmt">7 · Change Management</a>
+    <a href="#rca">8 · Root Cause Analysis</a>
+    <a href="#dr">9 · Disaster Recovery</a>
+    <a href="#automation">10 · Automation</a>
+
+    <div class="nav-section">Summary</div>
+    <a href="#standout">Why I Stand Out</a>
+    <a href="#about-me">About Me &amp; Fit</a>
+
+    <div class="nav-section">Resources</div>
+    <a href="network-workflows.html" target="_blank" style="color:var(--teal-300);font-weight:700;">⬡ Visual Workflows ↗</a>
+  </nav>
+</nav>
+
+<!-- ══ MAIN ══ -->
+<div id="main">
+
+  <!-- HERO -->
+  <div id="hero">
+    <div class="badge">Technical Work Sample · Portfolio Deliverable</div>
+    <h1>Enterprise Healthcare Network<br>Modernization Proposal</h1>
+    <p class="subtitle">A full-stack network engineering proposal covering design, security, SD-WAN, wireless, monitoring, and operations, built specifically for the BMC Network Engineer 3 role.</p>
+    <div class="meta-grid">
+      <div class="meta-item"><strong>Prepared by</strong>Praveendhra Rajkumar</div>
+      <div class="meta-item"><strong>Role Applied</strong>Network Engineer 3</div>
+      <div class="meta-item"><strong>Location</strong>Framingham, MA (Local to BMC)</div>
+      <div class="meta-item"><strong>Contact</strong>p.rajkumar001@umb.edu · (857) 391-4257</div>
+      <div class="meta-item"><strong>Education</strong>MS Computer Science, UMass Boston, 2024</div>
+      <div class="meta-item"><strong>Date</strong>May 2026</div>
+    </div>
+  </div>
+
+  <!-- STAT BAR -->
+  <div class="stats-bar">
+    <div class="stat-card"><div class="val">4.2</div><div class="lbl">VoIP MOS Score (from 2.8)</div></div>
+    <div class="stat-card"><div class="val">−40%</div><div class="lbl">EHR Screen Load Time</div></div>
+    <div class="stat-card"><div class="val">−30%</div><div class="lbl">L1 Escalations to Network Team</div></div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- EXECUTIVE SUMMARY -->
+    <section id="executive-summary">
+      <div class="section-header">
+        <div class="section-number">✦</div>
+        <h2>Executive Summary</h2>
+      </div>
+      <p>This document is a scenario-based technical work sample for the Network Engineer 3 role at BMC: a campus network infrastructure assessment and modernization proposal for a multi-site hospital environment.</p>
+      <p>It covers network design, security segmentation, SD-WAN, wireless, monitoring, change management, and automation, with every section mapped to a direct requirement in the job description.</p>
+    </section>
+
+    <!-- SCENARIO -->
+    <section id="scenario">
+      <div class="section-header">
+        <div class="section-number">✦</div>
+        <h2>Scenario</h2>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <tbody>
+            <tr><td><strong>Organization</strong></td><td>Mid-to-large hospital system, 3 campuses, ~4,500 users, 1,200 beds</td></tr>
+            <tr><td><strong>Problem Statement</strong></td><td>Aging Cisco 3750/6500 core infrastructure, flat network with no clinical/IoT segmentation, unreliable Silver Peak SD-WAN, no consistent NAC policy. VoIP call drops, slow EHR response times. DR failover never tested.</td></tr>
+            <tr><td><strong>My Role</strong></td><td>Lead Network Engineer responsible for the full assessment, design, and rollout plan</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- CURRENT STATE -->
+    <section id="current-state">
+      <div class="section-header">
+        <div class="section-number">1</div>
+        <h2>Current State Assessment</h2>
+      </div>
+
+      <h3>Current Network Topology</h3>
+      <div class="topology">
+<span class="node">[Internet/WAN]</span>
+      |
+  <span class="node">[ASA Firewall]</span>  <span class="comment">← hardware EOL, no NGFW capabilities</span>
+      |
+  <span class="node">[Cisco 6500 Core]</span>  <span class="comment">← no redundancy, single supervisor</span>
+      |
+  <span class="node">[Cisco 3750 Distribution/Access]</span>
+      |
+  <span class="node">[End Devices: Workstations, VoIP Phones, Medical IoT]</span>  <span class="comment">← all on flat VLAN 1</span>
+      </div>
+
+      <h3>Key Issues Found</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Issue</th><th>Impact</th><th>Risk</th></tr></thead>
+          <tbody>
+            <tr><td>Flat network (VLAN 1 everywhere)</td><td>No clinical/IoT segmentation; lateral movement risk</td><td><span class="badge-critical">CRITICAL</span></td></tr>
+            <tr><td>Cisco 6500 single supervisor</td><td>Core failure = full campus outage</td><td><span class="badge-critical">CRITICAL</span></td></tr>
+            <tr><td>Legacy ASA firewall (no App-ID)</td><td>No application visibility or Layer 7 control</td><td><span class="badge-high">HIGH</span></td></tr>
+            <tr><td>Silver Peak SD-WAN misconfigured</td><td>No QoS policies; voice/video not prioritized</td><td><span class="badge-high">HIGH</span></td></tr>
+            <tr><td>No 802.1X / NAC enforcement</td><td>Any device can connect to any port</td><td><span class="badge-high">HIGH</span></td></tr>
+            <tr><td>Aruba APs on old firmware, no WIPS</td><td>Rogue AP risk; compliance gap</td><td><span class="badge-medium">MEDIUM</span></td></tr>
+            <tr><td>No automated config backup</td><td>DR runbooks untested; configs undocumented</td><td><span class="badge-medium">MEDIUM</span></td></tr>
+            <tr><td>SolarWinds polling too long (10 min)</td><td>Misses short-duration outages</td><td><span class="badge-medium">MEDIUM</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- PROPOSED ARCH -->
+    <section id="proposed-arch">
+      <div class="section-header">
+        <div class="section-number">2</div>
+        <h2>Proposed Architecture</h2>
+      </div>
+
+      <h3>Target Topology</h3>
+      <div class="topology">
+                    <span class="node">[Internet]</span>
+                        |
+                <span class="node">[Palo Alto PA-5250 HA Pair]</span>
+                <span class="node">[Panorama Central Management]</span>
+                        |
+           <span class="node">[Cisco Nexus 9508, Core (VXLAN/EVPN)]</span>
+           [Dual Supervisors | VSS/vPC | BGP/OSPF]
+            /                           \
+  <span class="node">[Nexus 9300, Dist A]</span>           <span class="node">[Nexus 9300, Dist B]</span>
+       |                                   |
+  [Access Switches]                   [Access Switches]
+  [Cisco 9200/9300]                   [Cisco 9200/9300]
+       |
+  <span class="node">[Aruba APs (Wi-Fi 6)]</span>
+  <span class="node">[Aruba ClearPass, NAC]</span>
+       |
+  <span class="node">[Silver Peak SD-WAN, Unity Orchestrator]</span>
+       |
+  [WAN: MPLS Primary | Broadband Failover | LTE Emergency]
+      </div>
+
+      <h3>Network Segmentation Plan</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Zone</th><th>VLAN Range</th><th>VRF</th><th>Access Policy</th></tr></thead>
+          <tbody>
+            <tr><td>Clinical Workstations</td><td>100–149</td><td>VRF-CLINICAL</td><td>802.1X; ClearPass; EHR/PACS access only</td></tr>
+            <tr><td>VoIP</td><td>200–209</td><td>VRF-VOICE</td><td>Trusted; DSCP EF; CDP auto-VLAN</td></tr>
+            <tr><td>Medical IoT</td><td>300–349</td><td>VRF-IOT</td><td>MAC-Auth Bypass; no internet; tightly ACL'd</td></tr>
+            <tr><td>Server / Datacenter</td><td>400–449</td><td>VRF-DC</td><td>Firewall-enforced; no direct user access</td></tr>
+            <tr><td>Guest / Visitor Wi-Fi</td><td>500</td><td>VRF-GUEST</td><td>Internet-only; isolated; ClearPass sponsored</td></tr>
+            <tr><td>Management</td><td>999</td><td>VRF-MGMT</td><td>Jump host access only; OOB preferred</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout">
+        <strong>Why this matters:</strong> Medical IoT devices like infusion pumps and imaging systems typically can't be updated or patched. Keeping them in their own isolated network segment is a core HIPAA requirement (Security Rule §164.312) and a basic patient safety measure.
+      </div>
+    </section>
+
+    <!-- SECURITY -->
+    <section id="security">
+      <div class="section-header">
+        <div class="section-number">3</div>
+        <h2>Security Design: Palo Alto Zero Trust</h2>
+      </div>
+
+      <h3>Zone Architecture</h3>
+      <div class="topology">
+Zones:
+  <span class="node">UNTRUST</span>   → internet-facing
+  <span class="node">DMZ</span>       → public-facing services (patient portal, external APIs)
+  <span class="node">CLINICAL</span>  → EHR, PACS, clinical workstations
+  <span class="node">IOT</span>       → medical devices
+  <span class="node">VOICE</span>     → VoIP infrastructure
+  <span class="node">DC</span>        → datacenter servers
+  <span class="node">MGMT</span>      → network management plane
+  <span class="node">GUEST</span>     → visitor internet
+      </div>
+
+      <h3>Firewall Policy Approach</h3>
+      <ul>
+        <li><strong>Default Deny All</strong> between zones; explicit permit only.</li>
+        <li>Use <strong>App-ID</strong> instead of port-based rules: allow <code>epic-ehr</code> application, not just TCP/443.</li>
+        <li><strong>User-ID</strong> integration with Active Directory: policies apply to user groups, not IPs.</li>
+        <li><strong>Threat Prevention</strong> on all inter-zone rules; <strong>WildFire</strong> for unknown file inspection.</li>
+      </ul>
+      <pre><code><span class="cm"># Clinical-to-Datacenter Rule</span>
+Rule: Allow-EHR-Access
+  Source Zone:      CLINICAL
+  Destination Zone: DC
+  Application:      epic-ehr, ssl
+  Service:          application-default
+  Source User:      domain\clinical-staff
+  Action:           Allow
+  Profile:          Threat-Prevention-Strict
+  Log:              Yes <span class="cm">(forward to Panorama)</span></code></pre>
+
+      <h3>High Availability Config</h3>
+      <pre><code>set deviceconfig high-availability enabled yes
+set deviceconfig high-availability group 1 mode active-passive
+set deviceconfig high-availability group 1 peer-ip 10.0.99.2
+set deviceconfig high-availability group 1 election-option heartbeat-backup enabled yes
+set deviceconfig high-availability group 1 state-synchronization enabled yes</code></pre>
+    </section>
+
+    <!-- SD-WAN -->
+    <section id="sdwan">
+      <div class="section-header">
+        <div class="section-number">4</div>
+        <h2>SD-WAN: Aruba Silver Peak</h2>
+      </div>
+
+      <h3>What Was Wrong</h3>
+      <p>Silver Peak was running on default settings with no smart routing. VoIP calls were going over the slower broadband link even when the faster MPLS link was available, which meant jitter over 30ms and dropped calls.</p>
+
+      <h3>Traffic Routing Policies</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Overlay</th><th>Applications</th><th>Primary Path</th><th>Failover</th><th>SLA Threshold</th></tr></thead>
+          <tbody>
+            <tr><td>Realtime-Voice</td><td>SIP, RTP, H.323</td><td>MPLS</td><td>LTE</td><td>Latency &lt;20ms, Jitter &lt;5ms, Loss &lt;0.1%</td></tr>
+            <tr><td>Clinical-Data</td><td>Epic EHR, PACS, HL7</td><td>MPLS</td><td>Broadband</td><td>Latency &lt;50ms, Loss &lt;0.5%</td></tr>
+            <tr><td>General-Business</td><td>HTTP/S, Email, DNS</td><td>Broadband</td><td>MPLS</td><td>Best-effort</td></tr>
+            <tr><td>Guest</td><td>Internet browsing</td><td>Broadband</td><td>—</td><td>Best-effort; throttled 10Mbps</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout"><strong>Packet Order Correction and Forward Error Correction (FEC)</strong> were turned on for the voice overlay. This means even if the broadband path has hiccups, the audio stays clean.</div>
+
+      <h3>Results After the Fix</h3>
+      <div class="outcomes">
+        <div class="outcome-card"><div class="arrow">↑</div><div class="metric">2.8 → 4.2</div><div class="desc">VoIP MOS Score</div></div>
+        <div class="outcome-card"><div class="arrow">↓</div><div class="metric">−40%</div><div class="desc">EHR screen load time during peak hours</div></div>
+        <div class="outcome-card"><div class="arrow">⚡</div><div class="metric">&lt;2 sec</div><div class="desc">MPLS → broadband WAN failover time</div></div>
+      </div>
+    </section>
+
+    <!-- WIRELESS -->
+    <section id="wireless">
+      <div class="section-header">
+        <div class="section-number">5</div>
+        <h2>Wireless: Aruba Wi-Fi 6</h2>
+      </div>
+
+      <h3>RF and AP Design</h3>
+      <ul>
+        <li>Conducted <strong>Ekahau site survey</strong> for each floor/wing before AP placement.</li>
+        <li>Deployed <strong>Aruba AP-635</strong> (Wi-Fi 6, tri-radio) in high-density clinical areas; <strong>AP-515</strong> in corridors.</li>
+        <li>Configured <strong>band steering</strong> to push capable clients to 5 GHz; <strong>airtime fairness</strong> enabled.</li>
+        <li>Transmit power set to <strong>auto</strong> with guard rails (7 dBm min, 18 dBm max) to prevent co-channel interference.</li>
+      </ul>
+
+      <h3>SSID Design</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>SSID</th><th>Band</th><th>Security</th><th>VLAN</th><th>NAC Policy</th></tr></thead>
+          <tbody>
+            <tr><td>BMC-Clinical</td><td>5 GHz preferred</td><td>WPA3-Enterprise / 802.1X</td><td>100</td><td>ClearPass: domain device + user cert</td></tr>
+            <tr><td>BMC-Voice</td><td>5 GHz</td><td>WPA2-Enterprise</td><td>200</td><td>ClearPass: MAC-Auth for handsets</td></tr>
+            <tr><td>BMC-IoT</td><td>2.4 / 5 GHz</td><td>WPA2-PSK (per-device)</td><td>300</td><td>ClearPass: MAC-Auth Bypass</td></tr>
+            <tr><td>BMC-Guest</td><td>5 GHz</td><td>Captive Portal</td><td>500</td><td>ClearPass: sponsored / self-register</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Access Control Policy</h3>
+      <pre><code>Authentication:
+  1. EAP-TLS (device certificate) → AD computer object check
+  2. PEAP-MSCHAPv2 fallback (user credentials) → AD group membership check
+
+Authorization Rules:
+  IF [AD-Group = "Clinical-Staff"] AND [Device-Cert = Valid]
+    → VLAN 100, dACL: permit-clinical-apps
+
+  IF [AD-Group = "Contractor"] AND [Device-Cert = None]
+    → VLAN 500 (Guest), redirect to IT approval portal
+
+  IF [MAC = known-IoT-device-list]
+    → VLAN 300, dACL: permit-dst-only 10.40.0.0/16
+
+  Default:
+    → DENY / quarantine VLAN</code></pre>
+    </section>
+
+    <!-- MONITORING -->
+    <section id="monitoring">
+      <div class="section-header">
+        <div class="section-number">6</div>
+        <h2>Monitoring: SolarWinds</h2>
+      </div>
+
+      <h3>What We Monitor</h3>
+      <ul>
+        <li><strong>SolarWinds NPM:</strong> All network nodes, SNMP v3 only (v1/v2c disabled for security).</li>
+        <li><strong>SolarWinds NTA (NetFlow):</strong> NetFlow v9 from all distribution switches; top-talker analysis per VLAN.</li>
+        <li><strong>SolarWinds NCM:</strong> Automated nightly config backups; compliance checking (no telnet, SSH v2 enforced).</li>
+        <li><strong>Airwave / Aruba Central:</strong> Wireless health dashboards; client roaming analysis; rogue AP alerting.</li>
+      </ul>
+
+      <h3>Alert Thresholds</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Metric</th><th>Warning</th><th>Critical</th><th>Action</th></tr></thead>
+          <tbody>
+            <tr><td>Core switch CPU</td><td>60%</td><td>80%</td><td>Page on-call + auto-create ServiceNow incident</td></tr>
+            <tr><td>WAN circuit utilization</td><td>70%</td><td>90%</td><td>Capacity review ticket auto-created</td></tr>
+            <tr><td>VoIP VLAN packet loss</td><td>0.1%</td><td>0.5%</td><td>Immediate escalation to network on-call</td></tr>
+            <tr><td>AP client count / radio</td><td>25</td><td>40</td><td>RF team notified for load balancing</td></tr>
+            <tr><td>Firewall session table</td><td>75%</td><td>90%</td><td>Palo Alto TAC + change request for scale-out</td></tr>
+            <tr><td>Config drift detected</td><td>—</td><td>Any</td><td>Auto-restore from NCM and create a ServiceNow alert</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout"><strong>Custom Help Desk Dashboard:</strong> Built a tailored SolarWinds view that shows the Help Desk exactly what they need, EHR system status, top bandwidth users, wireless client counts per floor, and WAN health. They can self-triage before calling the network team, which cut escalations by <strong>~30%</strong>.</div>
+    </section>
+
+    <!-- CHANGE MANAGEMENT -->
+    <section id="change-mgmt">
+      <div class="section-header">
+        <div class="section-number">7</div>
+        <h2>Change Management</h2>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <tbody>
+            <tr><td><strong>Change Title</strong></td><td>Core Network Upgrade, Replace Cisco 6500 with Nexus 9508 (Campus A)</td></tr>
+            <tr><td><strong>Change Type</strong></td><td>Normal (CAB approval required)</td></tr>
+            <tr><td><strong>Risk Level</strong></td><td><span class="badge-high">HIGH</span></td></tr>
+            <tr><td><strong>Change Window</strong></td><td>Saturday 01:00–05:00 (4-hour window)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Pre-Change Checklist</h3>
+      <ul class="checklist">
+        <li>Nexus 9508 staged and tested in lab with production config</li>
+        <li>All interface configs migrated and peer-reviewed by second engineer</li>
+        <li>SolarWinds NCM config backup of 6500 captured (timestamped)</li>
+        <li>Rollback tested in lab: old 6500 reconnected in &lt;15 minutes</li>
+        <li>On-call clinician IT liaison notified; Epic team on standby</li>
+        <li>Maintenance mode set in SolarWinds (suppress alerts during window)</li>
+        <li>Change approved by CAB; Network Lead sign-off confirmed</li>
+      </ul>
+
+      <h3>Implementation Steps</h3>
+      <ol class="steps">
+        <li>Confirm no active clinical procedures on affected segment (with charge nurse)</li>
+        <li>Enable maintenance mode in SolarWinds NPM</li>
+        <li>Gracefully migrate routing: redistribute routes to backup path</li>
+        <li>Disconnect 6500; patch fiber to Nexus 9508</li>
+        <li>Bring up Nexus 9508; verify BGP/OSPF adjacencies</li>
+        <li>Validate: ping all gateway IPs, verify EHR connectivity from test workstation</li>
+        <li>Monitor SolarWinds for 30 min; verify no alerts</li>
+        <li>Disable maintenance mode; then notify stakeholders once confirmed</li>
+      </ol>
+
+      <h3>Rollback Plan</h3>
+      <div class="callout">If EHR/critical system connectivity not restored within 30 min of cutover: reconnect Cisco 6500 → re-enable routing (configs preserved) → restore OSPF adjacencies (&lt;5 min) → open P1 incident → CAB post-mortem within 48 hours.</div>
+    </section>
+
+    <!-- RCA -->
+    <section id="rca">
+      <div class="section-header">
+        <div class="section-number">8</div>
+        <h2>Root Cause Analysis: VoIP Outage</h2>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <tbody>
+            <tr><td><strong>Incident</strong></td><td>P2: Intermittent VoIP call drops, Campus B, ~200 users</td></tr>
+            <tr><td><strong>Duration</strong></td><td>4 hours</td></tr>
+            <tr><td><strong>Detection</strong></td><td>SolarWinds NTA alert: VoIP VLAN packet loss spiked to 3.2%</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Incident Timeline</h3>
+      <div class="timeline">
+        <div class="tl-item"><span class="tl-time">09:15</span> SolarWinds alert: VLAN 200 packet loss &gt; 0.5% threshold</div>
+        <div class="tl-item"><span class="tl-time">09:17</span> On-call network engineer paged via ServiceNow</div>
+        <div class="tl-item"><span class="tl-time">09:25</span> Identified: distribution switch SW-B-DIST-02 CPU at 98%</div>
+        <div class="tl-item"><span class="tl-time">09:35</span> Root cause isolated: BPDU storm from unmanaged switch plugged in by facilities team</div>
+        <div class="tl-item"><span class="tl-time">09:50</span> Port shut down; BPDU Guard triggered; STP topology stabilized</div>
+        <div class="tl-item"><span class="tl-time">10:00</span> VoIP packet loss returned to &lt;0.05%; calls restored</div>
+        <div class="tl-item"><span class="tl-time">13:15</span> Post-incident: BPDU Guard enabled globally on all access ports; incident closed</div>
+      </div>
+
+      <h3>Corrective Actions</h3>
+      <ul>
+        <li><strong>Immediate:</strong> Enabled BPDU Guard on all access ports campus-wide via automated NCM script.</li>
+        <li><strong>Short-term:</strong> ClearPass policy updated, non-802.1X ports auto-shut after 30 seconds.</li>
+        <li><strong>Long-term:</strong> Physical security audit of all IDF closets; keycard access required.</li>
+        <li><strong>Process:</strong> Added "unmanaged switch connected" to NOC Level 1 troubleshooting runbook.</li>
+      </ul>
+    </section>
+
+    <!-- DR -->
+    <section id="dr">
+      <div class="section-header">
+        <div class="section-number">9</div>
+        <h2>Disaster Recovery, Network DR Runbook</h2>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <tbody>
+            <tr><td><strong>Scenario</strong></td><td>Campus A Core Switch Failure</td></tr>
+            <tr><td><strong>RTO</strong></td><td>30 minutes</td></tr>
+            <tr><td><strong>RPO</strong></td><td>Last nightly config backup (SolarWinds NCM)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <pre><code>1. DETECT
+   - SolarWinds NPM critical alert: Core-A-NEXUS-01 unreachable
+   - Confirm via physical check or OOB console (MGMT network)
+
+2. ISOLATE
+   - Confirm hardware (supervisor) vs software (process crash)
+   - check: "show system resources" and "show module" via OOB console
+
+3. FAILOVER (hardware failure confirmed)
+   - Redundant supervisor: auto-failover (&lt;30 sec with NSF/SSO)
+   - Chassis failure: activate pre-staged spare Nexus 9508 in DR rack
+     a. Load config from NCM backup (SCP from jump host)
+     b. Reconnect fiber uplinks in IDF patch panel
+     c. Verify: "show ip ospf neighbor" / "show bgp summary"
+     d. Confirm EHR reachability from clinical test workstation
+
+4. VALIDATE
+   - Ping all 20 critical server IPs (/scripts/validate-core.sh)
+   - Confirm SolarWinds shows all nodes green
+   - Call charge nurse on each floor to confirm clinical access
+
+5. COMMUNICATE
+   - Update ServiceNow P1 incident every 15 minutes
+   - Notify Network Lead and IT leadership
+   - Post-incident RCA within 48 hours</code></pre>
+    </section>
+
+    <!-- AUTOMATION -->
+    <section id="automation">
+      <div class="section-header">
+        <div class="section-number">10</div>
+        <h2>Automation &amp; Scripting (Value-Add)</h2>
+      </div>
+      <p>The job description doesn't require scripting, but it's something I do naturally. Automating tedious, error-prone tasks at scale is how I think about infrastructure operations:</p>
+      <h3>Nightly Compliance Script (Python + Netmiko)</h3>
+      <pre><code><span class="kw">from</span> netmiko <span class="kw">import</span> ConnectHandler
+<span class="kw">import</span> re
+
+<span class="cm"># Ensure all devices comply: SSH v2 only, no telnet, BPDU Guard on access ports</span>
+compliance_checks = [
+    (<span class="str">"transport input ssh"</span>, <span class="str">"Telnet disabled"</span>),
+    (<span class="str">"ip ssh version 2"</span>, <span class="str">"SSH v2 enforced"</span>),
+    (<span class="str">"spanning-tree portfast bpduguard default"</span>, <span class="str">"BPDU Guard global"</span>),
+]
+
+devices = [...]  <span class="cm"># loaded from IPAM / SolarWinds asset list</span>
+
+<span class="kw">for</span> device <span class="kw">in</span> devices:
+    conn = ConnectHandler(**device)
+    config = conn.send_command(<span class="str">"show running-config"</span>)
+    <span class="kw">for</span> check, description <span class="kw">in</span> compliance_checks:
+        status = <span class="str">"PASS"</span> <span class="kw">if</span> re.search(check, config) <span class="kw">else</span> <span class="str">"FAIL"</span>
+        print(<span class="str">f"{device['host']} | {description}: {status}"</span>)
+    conn.disconnect()</code></pre>
+      <div class="callout">This runs every night automatically. If any device fails a check, a ServiceNow ticket is created without anyone having to look at a spreadsheet. No manual auditing, no surprises.</div>
+    </section>
+
+    <!-- STAND OUT -->
+    <section id="standout">
+      <div class="section-header">
+        <div class="section-number">✦</div>
+        <h2>Why This Approach Stands Out</h2>
+      </div>
+      <div class="standout-grid">
+        <div class="standout-item">
+          <div class="icon">🏥</div>
+          <h4>Healthcare Context Awareness</h4>
+          <p>Every decision in this document treats network uptime as a patient safety issue, not just an IT metric. HIPAA segmentation and IoT isolation aren't afterthoughts, they're the starting point.</p>
+        </div>
+        <div class="standout-item">
+          <div class="icon">🔄</div>
+          <h4>Full Lifecycle, Not Just One Layer</h4>
+          <p>From drawing the architecture to writing the DR runbook to scripting the nightly audit, this sample covers the entire job, not just the parts that look good on a resume.</p>
+        </div>
+        <div class="standout-item">
+          <div class="icon">🔍</div>
+          <h4>Root Cause, Not Band-Aids</h4>
+          <p>The VoIP outage RCA goes beyond "we fixed it." It shows why it happened, what was done immediately, and what was changed permanently so it can't happen again.</p>
+        </div>
+        <div class="standout-item">
+          <div class="icon">📋</div>
+          <h4>Changes Done Right</h4>
+          <p>Every change has a pre-flight checklist, a rollback plan good enough to actually use under pressure, and clear communication to clinical stakeholders before anyone touches production.</p>
+        </div>
+        <div class="standout-item">
+          <div class="icon">📊</div>
+          <h4>Monitoring That Helps People</h4>
+          <p>Monitoring built so the Help Desk can answer their own questions without calling the network team. That freed up 30% of the escalation load and improved first-call resolution for clinical staff.</p>
+        </div>
+        <div class="standout-item">
+          <div class="icon">⚙️</div>
+          <h4>Automate the Boring Stuff</h4>
+          <p>A nightly compliance check that runs itself and raises a ticket if something's wrong. Consistent standards across every device, without anyone remembering to check.</p>
+        </div>
+      </div>
+
+      <div class="callout" style="margin-top:1.5rem;">
+        <strong>Quantified outcomes:</strong> VoIP MOS 2.8 → 4.2 &nbsp;·&nbsp; EHR load time −40% &nbsp;·&nbsp; L1 escalations −30% &nbsp;·&nbsp; WAN failover &lt;2 seconds
+      </div>
+      <div style="margin-top:1.2rem;text-align:center;">
+        <a href="network-workflows.html" target="_blank"
+           style="display:inline-flex;align-items:center;gap:0.5rem;background:var(--teal-700);color:white;text-decoration:none;padding:0.75rem 1.8rem;border-radius:10px;font-weight:700;font-size:0.88rem;transition:background 0.2s;"
+           onmouseover="this.style.background='var(--teal-500)'" onmouseout="this.style.background='var(--teal-700)'">
+          ⬡ View Interactive Visual Workflows &nbsp;→
+        </a>
+      </div>
+    </section>
+
+    <!-- ABOUT ME -->
+    <section id="about-me">
+      <div class="section-header">
+        <div class="section-number">✪</div>
+        <h2>About Me &amp; How I Map to This Role</h2>
+      </div>
+
+      <div class="profile-card">
+        <div class="profile-avatar">PR</div>
+        <div class="profile-info">
+          <h3>Praveendhra Rajkumar <span style="font-weight:400;font-size:0.85rem;color:var(--muted)">(he/him)</span></h3>
+          <div class="title-tag">DevOps &amp; Cloud Engineer, moving into Enterprise Network Engineering</div>
+          <div class="profile-contacts">
+            <span>📍 Framingham, MA (local to Boston Medical Center)</span>
+            <span>📧 p.rajkumar001@umb.edu</span>
+            <span>📞 (857) 391-4257</span>
+          </div>
+          <div class="skill-tags">
+            <span class="skill-tag highlight">F5 Load Balancers</span>
+            <span class="skill-tag highlight">Disaster Recovery</span>
+            <span class="skill-tag highlight">Config Drift Detection</span>
+            <span class="skill-tag highlight">Python Automation</span>
+            <span class="skill-tag highlight">Infrastructure Monitoring</span>
+            <span class="skill-tag">AWS &amp; Azure</span>
+            <span class="skill-tag">Docker / Kubernetes</span>
+            <span class="skill-tag">Terraform</span>
+            <span class="skill-tag">Bash Scripting</span>
+            <span class="skill-tag">NGINX</span>
+            <span class="skill-tag">GitHub Actions</span>
+            <span class="skill-tag">MS CS, UMass Boston</span>
+          </div>
+        </div>
+      </div>
+
+      <h3>How My Background Connects</h3>
+      <p>My title is DevOps Engineer, but a lot of what I've spent the last 6 years doing maps directly to this role. I've worked directly with F5 load balancers, run quarterly DR site failovers, built automated config drift detection, and handled on-call production deployments with a 99%+ on-time rate. Below is how each of those experiences connects to something specific in this job.</p>
+
+      <div class="exp-bridge">
+        <div class="exp-bridge-item">
+          <div class="role-label">Zoho Corporation · 2019-2022</div>
+          <h4>F5 NGINX Load Balancer Optimization</h4>
+          <p>Refactored F5 NGINX routing logic based on custom request headers, improving traffic distribution efficiency and reducing latency by 10–15% for high-traffic services.</p>
+          <div class="arrow-bridge">→ Connects to: F5 Load Balancers listed in the job requirements</div>
+        </div>
+        <div class="exp-bridge-item">
+          <div class="role-label">Zoho Corporation · 2019-2022</div>
+          <h4>Quarterly Disaster Recovery Switchovers</h4>
+          <p>Coordinated scheduled DR site switchovers quarterly, contributing to 99.9%+ uptime targets. Validated failover procedures, documented runbooks, and ensured business continuity across systems.</p>
+          <div class="arrow-bridge">→ Connects to: Disaster Recovery section in this document</div>
+        </div>
+        <div class="exp-bridge-item">
+          <div class="role-label">Zoho Corporation · 2019-2022</div>
+          <h4>Config Drift Detection Framework</h4>
+          <p>Built a tool that automatically compared production and DR configs and flagged anything out of sync. Cut config discrepancies by about 80% and meant no one had to do manual side-by-side reviews anymore.</p>
+          <div class="arrow-bridge">→ Connects to: SolarWinds NCM and config compliance in Section 6</div>
+        </div>
+        <div class="exp-bridge-item">
+          <div class="role-label">Bright Horizons · 2022–Present</div>
+          <h4>Quarterly Resilience Testing</h4>
+          <p>Deliberately broke things in a controlled way each quarter to find DR and failover gaps before users ever saw them. Same philosophy behind the DR runbook in Section 9.</p>
+          <div class="arrow-bridge">→ Connects to: DR failover testing in Section 9</div>
+        </div>
+        <div class="exp-bridge-item">
+          <div class="role-label">Bright Horizons · 2022–Present</div>
+          <h4>Workflow Automation</h4>
+          <p>Automated deployment pipelines and introduced AI-assisted tooling across a team of 20+ engineers, cutting manual effort by ~40% and deployment lead time from days to under a day.</p>
+          <div class="arrow-bridge">→ Connects to: Automation approach in Section 10</div>
+        </div>
+        <div class="exp-bridge-item">
+          <div class="role-label">Bright Horizons · 2022–Present</div>
+          <h4>On-Call and Production Ownership</h4>
+          <p>I coordinate weekly production deployments with a 99%+ on-time rate and rotate on-call for critical systems. I know what it's like to get paged at 2am and have to make fast decisions.</p>
+          <div class="arrow-bridge">→ Connects to: On-call rotation and off-hours support in the JD</div>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /content -->
+
+  <footer>
+    <p>Praveendhra Rajkumar &nbsp;&middot;&nbsp; p.rajkumar001@umb.edu &nbsp;&middot;&nbsp; (857) 391-4257 &nbsp;&middot;&nbsp; Framingham, MA<br>
+    Scenario details are composites drawn from real-world infrastructure engineering experience.</p>
+  </footer>
+
+</div><!-- /main -->
+
+<script>
+  // Highlight active sidebar nav item on scroll
+  const sections = document.querySelectorAll('section[id]');
+  const links = document.querySelectorAll('#sidebar nav a');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const active = document.querySelector(`#sidebar nav a[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+
+  sections.forEach(s => observer.observe(s));
+
+  // Smooth scroll
+  links.forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.querySelector(link.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Network Process Flows, Praveendhra Rajkumar</title>
+  <style>
+    :root {
+      --t900: #0d3d3a; --t800: #0f4f4b; --t700: #136560; --t600: #178078;
+      --t500: #1a9e94; --t400: #21bdb1; --t300: #4dd4ca; --t200: #99e8e3;
+      --t100: #d0f5f3; --t50: #f0fbfb;
+      --dark: #0a2826; --text: #1a2e2d; --muted: #4a6e6b; --border: #b2deda;
+      --green: #1a7a4a; --green-bg: #e9f7ef;
+      --red: #922b21; --red-bg: #fde8e8;
+      --amber: #784212; --amber-bg: #fef3e2;
+      --blue: #1a4f8a; --blue-bg: #e8f0fc;
+      --purple: #5b2d8a; --purple-bg: #f3e8fc;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--t50); color: var(--text); }
+
+    /* ── HEADER ── */
+    header {
+      background: linear-gradient(135deg, var(--t800) 0%, var(--t500) 100%);
+      color: white; padding: 1.8rem 2.5rem;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1rem;
+    }
+    header h1 { font-size: 1.4rem; font-weight: 800; margin-bottom: 0.2rem; }
+    header p  { font-size: 0.8rem; opacity: 0.75; max-width: 560px; }
+    .header-meta { font-size: 0.72rem; opacity: 0.6; margin-top: 0.2rem; }
+    .back-btn {
+      background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
+      color: white; text-decoration: none; padding: 0.55rem 1.2rem;
+      border-radius: 8px; font-size: 0.8rem; transition: background 0.2s; white-space: nowrap;
+    }
+    .back-btn:hover { background: rgba(255,255,255,0.25); }
+
+    /* ── TABS ── */
+    .tab-bar {
+      background: var(--t900); display: flex; gap: 0;
+      overflow-x: auto; border-bottom: 3px solid var(--t500);
+    }
+    .tab-bar::-webkit-scrollbar { height: 3px; }
+    .tab-bar::-webkit-scrollbar-thumb { background: var(--t500); }
+    .tab-btn {
+      padding: 1rem 1.6rem; background: none; border: none; color: rgba(255,255,255,0.55);
+      font-size: 0.82rem; font-weight: 600; cursor: pointer; white-space: nowrap;
+      border-bottom: 3px solid transparent; margin-bottom: -3px; transition: all 0.18s;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .tab-btn:hover { color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.05); }
+    .tab-btn.active { color: var(--t300); border-bottom-color: var(--t400); }
+    .tab-icon { font-size: 1rem; }
+
+    /* ── PANEL ── */
+    .tab-panel { display: none; padding: 2rem 2.5rem; max-width: 1100px; margin: 0 auto; }
+    .tab-panel.active { display: block; }
+    .panel-title { font-size: 1.3rem; font-weight: 800; color: var(--t800); margin-bottom: 0.4rem; }
+    .panel-desc { font-size: 0.88rem; color: var(--muted); margin-bottom: 0.6rem; }
+    .panel-from {
+      display: inline-block; background: var(--t100); border: 1px solid var(--t300);
+      color: var(--t800); font-size: 0.72rem; font-weight: 700; padding: 0.2rem 0.8rem;
+      border-radius: 20px; margin-bottom: 1.6rem;
+    }
+
+    /* ── LEGEND ── */
+    .legend {
+      display: flex; flex-wrap: wrap; gap: 0.6rem;
+      margin-bottom: 1.8rem; padding: 0.75rem 1rem;
+      background: white; border: 1px solid var(--border); border-radius: 10px;
+    }
+    .leg { display: flex; align-items: center; gap: 0.4rem; font-size: 0.72rem; color: var(--muted); }
+    .leg-dot { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+    .leg-dot.start  { background: var(--t800); border-radius: 20px; }
+    .leg-dot.proc   { background: var(--t600); }
+    .leg-dot.dec    { background: var(--amber-bg); border: 2px solid var(--amber); }
+    .leg-dot.ok     { background: var(--green-bg); border: 2px solid var(--green); }
+    .leg-dot.err    { background: var(--red-bg); border: 2px solid var(--red); }
+    .leg-dot.info   { background: var(--blue-bg); border: 2px solid var(--blue); }
+    .leg-dot.end    { background: var(--dark); border-radius: 20px; }
+
+    /* ── FLOW DIAGRAM ── */
+    .flow { display: flex; flex-direction: column; align-items: center; }
+
+    /* nodes */
+    .n {
+      padding: 0.75rem 1.4rem; border-radius: 10px; text-align: center;
+      font-size: 0.8rem; width: 260px; position: relative;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .n:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(26,158,148,0.25); }
+    .n .n-title { font-weight: 700; margin-bottom: 0.15rem; }
+    .n .n-sub   { font-size: 0.72rem; opacity: 0.75; }
+    .n .n-icon  { font-size: 1.2rem; margin-bottom: 0.3rem; display: block; }
+
+    .n-start { background: var(--t800); color: white; border-radius: 40px; }
+    .n-end   { background: var(--dark); color: white; border-radius: 40px; }
+    .n-proc  { background: white; border: 2px solid var(--t400); color: var(--text); }
+    .n-dec   { background: var(--amber-bg); border: 2px solid #d39a00; color: var(--amber); }
+    .n-ok    { background: var(--green-bg); border: 2px solid var(--green); color: var(--green); }
+    .n-err   { background: var(--red-bg); border: 2px solid var(--red); color: var(--red); }
+    .n-info  { background: var(--blue-bg); border: 2px solid var(--blue); color: var(--blue); }
+    .n-purple{ background: var(--purple-bg); border: 2px solid var(--purple); color: var(--purple); }
+    .n-teal  { background: var(--t100); border: 2px solid var(--t500); color: var(--t800); }
+
+    /* connector (animated flowing line + arrowhead) */
+    .conn {
+      display: flex; flex-direction: column; align-items: center;
+      height: 42px; flex-shrink: 0;
+    }
+    .conn-line {
+      width: 2px; flex: 1;
+      background: var(--t200); position: relative; overflow: hidden;
+    }
+    .conn-line::after {
+      content: '';
+      position: absolute; top: -42px; left: 0; width: 2px; height: 100%;
+      background: linear-gradient(to bottom, transparent 0%, var(--t400) 50%, transparent 100%);
+      animation: flowDown 1.1s linear infinite;
+    }
+    .conn-head {
+      width: 0; height: 0;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 7px solid var(--t300);
+    }
+    .conn.short { height: 28px; }
+    .conn.tall  { height: 55px; }
+
+    /* labelled connector */
+    .conn-label {
+      font-size: 0.68rem; font-weight: 700; padding: 0.12rem 0.5rem;
+      border-radius: 10px; margin: 2px 0;
+    }
+    .conn-label.yes { background: var(--green-bg); color: var(--green); }
+    .conn-label.no  { background: var(--red-bg); color: var(--red); }
+    .conn-label.alt { background: var(--amber-bg); color: var(--amber); }
+    .conn-label.info{ background: var(--blue-bg); color: var(--blue); }
+
+    @keyframes flowDown {
+      0%   { transform: translateY(0); }
+      100% { transform: translateY(84px); }
+    }
+
+    /* ── BRANCH ── */
+    .branch-wrap {
+      width: 100%; position: relative;
+      display: flex; flex-direction: column; align-items: center;
+    }
+    /* horizontal splitting line drawn with pseudo element */
+    .split-bar {
+      width: var(--bar-w, 70%); height: 2px;
+      background: var(--t300); position: relative;
+    }
+    /* endpoint connectors drawn per-column via branch-col ::before / ::after */
+
+    .branches {
+      display: flex; gap: 1rem; width: 100%; align-items: flex-start;
+    }
+    .branch-col {
+      flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0;
+    }
+    .branch-col .n { width: 100%; min-width: 0; }
+
+    /* top-level branch-cols draw their own vertical connector lines */
+    .branch-wrap > .branches > .branch-col {
+      position: relative;
+      padding-top: 24px;
+      padding-bottom: 24px;
+    }
+    .branch-wrap > .branches > .branch-col::before,
+    .branch-wrap > .branches > .branch-col::after {
+      content: '';
+      position: absolute;
+      left: 50%; transform: translateX(-50%);
+      width: 2px; height: 24px;
+      background: var(--t300);
+    }
+    .branch-wrap > .branches > .branch-col::before { top: 0; }
+    .branch-wrap > .branches > .branch-col::after  { bottom: 0; }
+
+    /* branch merge line */
+    .merge-bar {
+      width: var(--bar-w, 70%); height: 2px;
+      background: var(--t300); position: relative; margin-top: 0;
+    }
+    /* endpoint connectors provided by branch-col::after above */
+
+    /* swimlane headers for SD-WAN */
+    .swim-header {
+      font-size: 0.68rem; font-weight: 800; text-transform: uppercase;
+      letter-spacing: 0.08em; padding: 0.35rem 0.7rem; border-radius: 20px;
+      margin-bottom: 6px; text-align: center; width: 100%;
+    }
+    .swim-voice   { background: var(--purple-bg); color: var(--purple); }
+    .swim-clinical{ background: var(--blue-bg);   color: var(--blue); }
+    .swim-biz     { background: var(--amber-bg);  color: var(--amber); }
+    .swim-guest   { background: var(--t100);      color: var(--t700); }
+
+    /* sla tag */
+    .sla-tag {
+      font-size: 0.65rem; display: inline-block;
+      padding: 0.1rem 0.45rem; border-radius: 6px;
+      background: var(--dark); color: var(--t300);
+      font-family: monospace; margin-top: 4px;
+    }
+
+    /* side annotation */
+    .annotation {
+      position: absolute; right: -200px; top: 50%;
+      transform: translateY(-50%);
+      background: var(--t100); border: 1px solid var(--t300);
+      border-radius: 8px; padding: 0.4rem 0.7rem;
+      font-size: 0.7rem; color: var(--t700); width: 185px;
+      line-height: 1.4;
+    }
+    .annotation::before {
+      content: '';
+      position: absolute; left: -8px; top: 50%;
+      transform: translateY(-50%);
+      border-top: 6px solid transparent; border-bottom: 6px solid transparent;
+      border-right: 8px solid var(--t300);
+    }
+
+    /* responsive */
+    @media (max-width: 800px) {
+      header { padding: 1.2rem; }
+      .tab-panel { padding: 1.2rem; }
+      .branches { flex-direction: column; }
+      .branch-col .n { width: 260px; }
+      .annotation { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div>
+    <h1>Network Process Flows</h1>
+    <p>Step-by-step visual flows for the five core processes in this role: how SD-WAN routes traffic, how devices get onto the network, how changes get approved and executed, how incidents get resolved, and how the network recovers from a failure.</p>
+    <div class="header-meta">Praveendhra Rajkumar &nbsp;·&nbsp; p.rajkumar001@umb.edu &nbsp;·&nbsp; (857) 391-4257 &nbsp;·&nbsp; Framingham, MA</div>
+  </div>
+  <a href="work-sample-network-engineer-3.html" class="back-btn">← Work Sample</a>
+</header>
+
+<!-- TABS -->
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="show('sdwan',this)"><span class="tab-icon">🌐</span> SD-WAN Routing</button>
+  <button class="tab-btn" onclick="show('nac',this)"><span class="tab-icon">🔐</span> NAC Auth Flow</button>
+  <button class="tab-btn" onclick="show('change',this)"><span class="tab-icon">📋</span> Change Management</button>
+  <button class="tab-btn" onclick="show('incident',this)"><span class="tab-icon">🚨</span> Incident Response</button>
+  <button class="tab-btn" onclick="show('dr',this)"><span class="tab-icon">🔁</span> DR Runbook</button>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- TAB 1: SD-WAN                                   -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="tab-panel active" id="tab-sdwan">
+  <div class="panel-title">How SD-WAN Routes Traffic</div>
+  <div class="panel-desc">Every packet that hits the Silver Peak appliance gets classified by application type, then automatically sent down the best available WAN path, with instant failover if that path degrades. This is what fixed the VoIP call drop problem.</div>
+  <div class="panel-from">🔗 From the work sample: Aruba Silver Peak SD-WAN · VoIP MOS improved from 2.8 to 4.2</div>
+
+  <div class="legend">
+    <div class="leg"><div class="leg-dot start"></div>Entry point</div>
+    <div class="leg"><div class="leg-dot proc"></div>Process / Classification</div>
+    <div class="leg"><div class="leg-dot dec"></div>Decision / Policy Check</div>
+    <div class="leg"><div class="leg-dot ok"></div>Primary / Success path</div>
+    <div class="leg"><div class="leg-dot err"></div>Failover / Degraded path</div>
+    <div class="leg"><div class="leg-dot end"></div>Destination reached</div>
+  </div>
+
+  <div class="flow">
+    <!-- Source -->
+    <div class="n n-start">
+      <span class="n-icon">📡</span>
+      <div class="n-title">Incoming WAN Traffic</div>
+      <div class="n-sub">Branch office → Silver Peak appliance</div>
+    </div>
+    <div class="conn"><div class="conn-line"></div><div class="conn-head"></div></div>
+
+    <!-- DPI -->
+    <div class="n n-proc" style="width:300px;">
+      <span class="n-icon">🔍</span>
+      <div class="n-title">Deep Packet Inspection (DPI)</div>
+      <div class="n-sub">App-ID classification · layer 7 fingerprinting</div>
+    </div>
+    <div class="conn"><div class="conn-line"></div><div class="conn-head"></div></div>
+
+    <!-- Policy -->
+    <div class="n n-dec" style="width:300px;">
+      <span class="n-icon">⚖️</span>
+      <div class="n-title">Business Intent Overlay Assignment</div>
+      <div class="n-sub">Which overlay does this traffic belong to?</div>
+    </div>
+  </div>
+
+  <!-- 4-way branch -->
+  <div class="branch-wrap" style="margin-top:-2px;">
+    <div class="conn short"><div class="conn-line"></div><div class="conn-head" style="opacity:0"></div></div>
+    <div class="split-bar" style="--bar-w:90%;"></div>
+    <div class="branches" style="width:90%;margin:0 auto;">
+
+      <!-- VOICE -->
+      <div class="branch-col">
+        <div class="swim-header swim-voice">🎙 Voice / Realtime</div>
+        <div class="n n-purple">
+          <div class="n-title">SIP · RTP · H.323</div>
+          <div class="n-sub">Realtime-Voice Overlay</div>
+          <span class="sla-tag">Latency &lt;20ms · Jitter &lt;5ms · Loss &lt;0.1%</span>
+        </div>
+        <div class="conn short"><div class="conn-line"></div><div class="conn-head"></div></div>
+        <div class="n n-dec">
+          <div class="n-title">SLA Check on MPLS</div>
+          <div class="n-sub">Meets latency / loss threshold?</div>
+        </div>
+        <div class="conn short"><div class="conn-line"></div><div class="conn-head"></div></div>
+        <div class="n n-ok">
+          <div class="n-title">Route via MPLS</div>
+          <div class="n-sub">FEC + Packet Order Correction</div>
+        </div>
+        <div class="conn short"><div class="conn-line"></div><div class="conn-head"></div></div>
+        <div class="n n-teal" style="font-size:0.72rem;padding:0.5rem;">
+          <div class="n-title">SLA Fail → Failover to LTE</div>
+          <div class="n-sub">Auto switchover &lt;2s</div>
+        </div>
+      </div>
+
+      <!-- CLINICAL -->
+      <div class="branch-col">
+        <div class="swim-header swim-clinical">🏥 Clinical Data</div>
+        <div class="n n-info">
+          <div class="n-title">Epic EHR · PACS · HL7</div>
+          <div class="n-sub">Clinical-Data Overlay</div>
+          <span class="sla-tag">Latency &lt;50ms · Loss &lt;0.5%</span>
+        </div>
+        <div class="conn short"><div class="conn-line"></div><div class="conn-head"></div></div>
+        <div class="n n-dec">
+          <div class="n-title">SLA Check on MPLS</div>
+          <div class="n-sub">Meets threshold?</div>
+        </div>
+        <div class="conn short"><div class="conn-line"></div><div class="conn-head"></div></div>
+        <div class="n n-ok">
+          <div class="n-title">Route via MPLS</div>
+          <div class="n-sub">Priority queuing for EHR</div>
+        </div>
+        <div class="conn short"><div class="conn-line"></div><div class="conn-head"></div></div>
+        <div class="n n-teal" style="font-size:0.72rem;padding:0.5rem;">
+          <div class="n-title">SLA Fail → Failover Broadband</div>
+          <div class="n-sub">Auto switchover &lt;2s</div>
+        </div>
+      </div>
+
+      <!-- BUSINESS -->
+      <div class="branch-col">
+        <div class="swim-header swim-biz">💼 General Business</div>
+        <div class="n n-teal">
+          <div class="n-title">HTTP/S · Email · DNS</div>
+          <div class="n-sub">General-Business Overlay</div>
+          <span class="sla-tag">Best-effort · Broadband preferred</span>
+        </div>
+        <div class="conn short"><div class="conn-line"></div><div class="conn-head"></div></div>
+        <div class="n n-proc">
+          <div class="n-title">Route via Broadband</div>
+          <div class="n-sub">Offloads MPLS capacity</div>
+        </div>
+        <div class="conn short"><div class="conn-line"></div><div class="conn-head"></div></div>
+        <div class="n n-ok">
+          <div class="n-title">Broadband Healthy</div>
+          <div class="n-sub">Traffic flows normally</div>
+        </div>
+        <div class="conn short"><div class="conn-line"></div><div class="conn-head"></div></div>
+        <div class="n n-teal" style="font-size:0.72rem;padding:0.5rem;">
+          <div class="n-title">Broadband Fail → MPLS Fallback</div>
+        </div>
+      </div>
+
+      <!-- GUEST -->
+      <div class="branch-col">
+        <div class="swim-header swim-guest">👥 Guest / Visitor</div>
+        <div class="n n-teal">
+          <div class="n-title">Internet Browsing</div>
+          <div class="n-sub">Guest Overlay</div>
+          <span class="sla-tag">Best-effort · 10 Mbps cap</span>
+        </div>
+        <div class="conn short"><div class="conn-line"></div><div class="conn-head"></div></div>
+        <div class="n n-proc">
+          <div class="n-title">Route via Broadband</div>
+          <div class="n-sub">Rate limited · no MPLS access</div>
+        </div>
+        <div class="conn short"><div class="conn-line"></div><div class="conn-head"></div></div>
+        <div class="n n-ok">
+          <div class="n-title">Internet Delivered</div>
+          <div class="n-sub">Through captive portal VLAN</div>
+        </div>
+        <div class="conn short"><div class="conn-line"></div><div class="conn-head"></div></div>
+        <div class="n n-teal" style="font-size:0.72rem;padding:0.5rem;">
+          <div class="n-title">No failover, guest-only service</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Converge -->
+    <div class="merge-bar" style="--bar-w:90%;"></div>
+    <div class="conn short"><div class="conn-line"></div><div class="conn-head"></div></div>
+  </div>
+
+  <div class="flow">
+    <div class="n n-proc" style="width:300px">
+      <span class="n-icon">📊</span>
+      <div class="n-title">SolarWinds VoIP Quality Manager</div>
+      <div class="n-sub">Continuous MOS monitoring post-delivery</div>
+    </div>
+    <div class="conn"><div class="conn-line"></div><div class="conn-head"></div></div>
+    <div class="n n-end">
+      <span class="n-icon">✅</span>
+      <div class="n-title">Application SLA Met · Traffic Delivered</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- TAB 2: NAC AUTH FLOW                            -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="tab-panel" id="tab-nac">
+  <div class="panel-title">How Devices Get onto the Network</div>
+  <div class="panel-desc">Every device that plugs in or connects to Wi-Fi goes through this flow. ClearPass checks who you are, what device you're using, and puts you in exactly the right network segment, clinical staff, visitor, IoT device, or contractor. Nothing gets in by default.</div>
+  <div class="panel-from">🔗 From the work sample: Aruba ClearPass NAC · 802.1X · HIPAA Access Control</div>
+
+  <div class="legend">
+    <div class="leg"><div class="leg-dot start"></div>Entry</div>
+    <div class="leg"><div class="leg-dot proc"></div>Process</div>
+    <div class="leg"><div class="leg-dot dec"></div>Policy decision</div>
+    <div class="leg"><div class="leg-dot ok"></div>Access granted</div>
+    <div class="leg"><div class="leg-dot err"></div>Access denied / quarantine</div>
+    <div class="leg"><div class="leg-dot info"></div>AD lookup</div>
+  </div>
+
+  <div class="flow">
+    <div class="n n-start"><span class="n-icon">🔌</span><div class="n-title">Client Device Connects to Port</div><div class="n-sub">Wired or wireless, any campus segment</div></div>
+    <div class="conn"><div class="conn-line"></div><div class="conn-head"></div></div>
+    <div class="n n-proc"><span class="n-icon">📡</span><div class="n-title">Port Detects Connection</div><div class="n-sub">CDP / LLDP profiling · device fingerprinting begins</div></div>
+    <div class="conn"><div class="conn-line"></div><div class="conn-head"></div></div>
+    <div class="n n-dec"><span class="n-icon">🔏</span><div class="n-title">802.1X EAP Request Sent</div><div class="n-sub">Does device respond to EAP?</div></div>
+  </div>
+
+  <!-- 3-way branch: EAP-TLS, PEAP, No Response (MAB) -->
+  <div class="branch-wrap">
+    <div class="conn short"><div class="conn-line"></div><div class="conn-head" style="opacity:0"></div></div>
+    <div class="split-bar" style="--bar-w:85%;"></div>
+    <div class="branches" style="width:85%;margin:0 auto">
+
+      <!-- PATH A: EAP-TLS -->
+      <div class="branch-col">
+        <div class="swim-header swim-clinical">Path A, EAP-TLS</div>
+        <div class="n n-proc"><div class="n-title">Device presents certificate</div><div class="n-sub">Machine cert from internal CA</div></div>
+        <div class="conn short"><div class="conn-line"></div><div class="conn-head"></div></div>
+        <div class="n n-dec"><div class="n-title">Cert Valid?</div><div class="n-sub">Check against PKI trust store</div></div>
+        <div class="conn short"><div class="conn-line"></div><div class="conn-head"></div></div>
+        <div class="n n-info"><div class="n-title">AD Computer Object Lookup</div><div class="n-sub">Is device joined to domain?</div></div>
+        <div class="conn short"><div class="conn-line"></div><div class="conn-head"></div></div>
+        <div class="n n-dec"><div class="n-title">AD Group?</div></div>
+        <div class="conn short"><div class="conn-line"></div><div class="conn-head"></div></div>
+        <div class="n n-ok"><div class="n-title">Clinical Staff</div><div class="n-sub">→ VLAN 100 · dACL: permit-clinical-apps</div></div>
+      </div>
+
+      <!-- PATH B: PEAP -->
+      <div class="branch-col">
+        <div class="swim-header swim-biz">Path B, PEAP Fallback</div>
+        <div class="n n-proc"><div class="n-title">No machine cert</div><div class="n-sub">PEAP-MSCHAPv2 user credentials</div></div>
+        <div class="conn short"><div class="conn-line"></div><div class="conn-head"></div></div>
+        <div class="n n-info"><div class="n-title">AD User Auth</div><div class="n-sub">Username + password validated</div></div>
+        <div class="conn short"><div class="conn-line"></div><div class="conn-head"></div></div>
+        <div class="n n-dec"><div class="n-title">AD Group?</div></div>
+        <div class="conn short"><div class="conn-line"></div><div class="conn-head"></div></div>
+        <div class="n n-teal"><div class="n-title">Contractor</div><div class="n-sub">→ VLAN 500 Guest · redirect to IT portal</div></div>
+      </div>
+
+      <!-- PATH C: MAB -->
+      <div class="branch-col">
+        <div class="swim-header swim-guest">Path C, MAC Auth Bypass</div>
+        <div class="n n-dec"><div class="n-title">No 802.1X response</div><div class="n-sub">IoT / headless device</div></div>
+        <div class="conn short"><div class="conn-line"></div><div class="conn-head"></div></div>
+        <div class="n n-dec"><div class="n-title">MAC in known IoT list?</div><div class="n-sub">ClearPass device database</div></div>
+        <div class="conn short"><div class="conn-line"></div><div class="conn-head"></div></div>
+        <div class="n n-ok"><div class="n-title">Known IoT Device</div><div class="n-sub">→ VLAN 300 · dACL: healthcare servers only</div></div>
+        <div class="conn short"><div class="conn-line"></div><div class="conn-head"></div></div>
+        <div class="n n-err"><div class="n-title">Unknown Device</div><div class="n-sub">→ DENY · Quarantine VLAN · alert fired</div></div>
+      </div>
+
+    </div>
+    <div class="merge-bar" style="--bar-w:85%;"></div>
+    <div class="conn short"><div class="conn-line"></div><div class="conn-head"></div></div>
+  </div>
+
+  <div class="flow">
+    <div class="n n-proc"><span class="n-icon">📝</span><div class="n-title">ClearPass Logs Access Event</div><div class="n-sub">Username · device · VLAN · timestamp · policy matched</div></div>
+    <div class="conn"><div class="conn-line"></div><div class="conn-head"></div></div>
+    <div class="n n-end"><span class="n-icon">🛡️</span><div class="n-title">Device on correct VLAN · Least-privilege enforced</div></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- TAB 3: CHANGE MANAGEMENT                        -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="tab-panel" id="tab-change">
+  <div class="panel-title">How a Network Change Gets Made</div>
+  <div class="panel-desc">No one just logs in and makes changes to production. Every change has a risk review, a checklist, a rollback plan, and approval gates before anyone touches anything, and a post-review afterward. In a hospital, this process protects patients.</div>
+  <div class="panel-from">🔗 From the work sample: ServiceNow CHG · CAB approval · Reflects Bright Horizons production deployment discipline</div>
+
+  <div class="legend">
+    <div class="leg"><div class="leg-dot start"></div>Start</div>
+    <div class="leg"><div class="leg-dot proc"></div>Process step</div>
+    <div class="leg"><div class="leg-dot dec"></div>Decision / gate</div>
+    <div class="leg"><div class="leg-dot ok"></div>Success path</div>
+    <div class="leg"><div class="leg-dot err"></div>Rollback path</div>
+  </div>
+
+  <div class="flow">
+    <div class="n n-start"><span class="n-icon">📥</span><div class="n-title">Change Request Submitted</div><div class="n-sub">ServiceNow · engineer creates CHG record</div></div>
+    <div class="conn"><div class="conn-line"></div><div class="conn-head"></div></div>
+    <div class="n n-proc"><span class="n-icon">🔎</span><div class="n-title">Risk Assessment</div><div class="n-sub">Engineer documents: scope, impact, rollback plan, test plan</div></div>
+    <div class="conn"><div class="conn-line"></div><div class="conn-head"></div></div>
+    <div class="n n-dec"><span class="n-icon">⚖️</span><div class="n-title">Risk Classification?</div><div class="n-sub">Low / Normal / High</div></div>
+  </div>
+
+  <!-- branch: standard vs CAB -->
+  <div class="branch-wrap">
+    <div class="conn short"><div class="conn-line"></div><div class="conn-head" style="opacity:0"></div></div>
+    <div class="split-bar" style="--bar-w:85%;"></div>
+    <div class="branches" style="width:85%;margin:0 auto">
+      <div class="branch-col">
+        <div class="swim-header swim-guest">Low Risk</div>
+        <div class="n n-ok"><div class="n-title">Standard Change</div><div class="n-sub">Pre-approved template · no CAB needed</div></div>
+      </div>
+      <div class="branch-col">
+        <div class="swim-header swim-biz">Normal / High Risk</div>
+        <div class="n n-dec"><div class="n-title">CAB Review</div><div class="n-sub">Change Advisory Board approval required</div></div>
+        <div class="conn short"><div class="conn-line"></div><div class="conn-head"></div></div>
+        <div class="n n-dec"><div class="n-title">CAB Approved?</div></div>
+        <div class="conn short"><div class="conn-line"></div><div class="conn-head"></div></div>
+        <div class="n n-err"><div class="n-title">Rejected → Rework</div><div class="n-sub">Update plan, resubmit</div></div>
+      </div>
+    </div>
+    <div class="merge-bar" style="--bar-w:85%;"></div>
+    <div class="conn short"><div class="conn-line"></div><div class="conn-head"></div></div>
+  </div>
+
+  <div class="flow">
+    <div class="n n-proc" style="width:310px;"><span class="n-icon">✅</span><div class="n-title">Pre-Change Checklist (7 items)</div><div class="n-sub">Lab test · config backup (NCM) · rollback verified · stakeholders notified · maintenance mode set</div></div>
+    <div class="conn"><div class="conn-line"></div><div class="conn-head"></div></div>
+    <div class="n n-teal"><span class="n-icon">🕐</span><div class="n-title">Change Window Opens</div><div class="n-sub">Saturday 01:00–05:00 · clinical systems on standby</div></div>
+    <div class="conn"><div class="conn-line"></div><div class="conn-head"></div></div>
+    <div class="n n-proc"><span class="n-icon">⚙️</span><div class="n-title">Step-by-Step Implementation</div><div class="n-sub">Follow documented steps · update ServiceNow in real-time</div></div>
+    <div class="conn"><div class="conn-line"></div><div class="conn-head"></div></div>
+    <div class="n n-dec"><span class="n-icon">🧪</span><div class="n-title">Validation Tests</div><div class="n-sub">Ping gateways · EHR connectivity · SolarWinds all-green?</div></div>
+  </div>
+
+  <!-- branch: pass vs rollback -->
+  <div class="branch-wrap">
+    <div class="conn short"><div class="conn-line"></div><div class="conn-head" style="opacity:0"></div></div>
+    <div class="split-bar" style="--bar-w:80%;"></div>
+    <div class="branches" style="width:80%;margin:0 auto">
+      <div class="branch-col">
+        <div class="swim-header swim-clinical">✅ Validation Pass</div>
+        <div class="n n-ok"><div class="n-title">Maintenance Mode Off</div><div class="n-sub">SolarWinds alerts re-enabled</div></div>
+        <div class="conn short"><div class="conn-line"></div><div class="conn-head"></div></div>
+        <div class="n n-ok"><div class="n-title">Stakeholders Notified</div><div class="n-sub">Email + ServiceNow update</div></div>
+        <div class="conn short"><div class="conn-line"></div><div class="conn-head"></div></div>
+        <div class="n n-ok"><div class="n-title">CHG Record Closed</div></div>
+      </div>
+      <div class="branch-col">
+        <div class="swim-header swim-biz">❌ Validation Fail (within SLA)</div>
+        <div class="n n-err"><div class="n-title">Rollback Initiated</div><div class="n-sub">Reconnect old hardware · restore config</div></div>
+        <div class="conn short"><div class="conn-line"></div><div class="conn-head"></div></div>
+        <div class="n n-err"><div class="n-title">P1 Incident Created</div><div class="n-sub">ServiceNow P1 · notify on-call</div></div>
+        <div class="conn short"><div class="conn-line"></div><div class="conn-head"></div></div>
+        <div class="n n-proc"><div class="n-title">CAB Post-Mortem</div><div class="n-sub">Within 48 hours · updated risk plan</div></div>
+      </div>
+    </div>
+    <div class="merge-bar" style="--bar-w:80%;"></div>
+    <div class="conn short"><div class="conn-line"></div><div class="conn-head"></div></div>
+  </div>
+
+  <div class="flow">
+    <div class="n n-proc"><span class="n-icon">📊</span><div class="n-title">Post-Change Review (1 week)</div><div class="n-sub">SolarWinds trends · any unintended impact?</div></div>
+    <div class="conn"><div class="conn-line"></div><div class="conn-head"></div></div>
+    <div class="n n-end"><span class="n-icon">📁</span><div class="n-title">Change Knowledge Base Updated · Lessons Learned Captured</div></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- TAB 4: INCIDENT RESPONSE / RCA                  -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="tab-panel" id="tab-incident">
+  <div class="panel-title">How an Incident Gets Resolved for Good</div>
+  <div class="panel-desc">From the first alert to the last corrective action. This is the real BPDU storm incident from the work sample , showing how the network team detected it, found the root cause, fixed it immediately, and then made sure it literally cannot happen again.</div>
+  <div class="panel-from">🔗 From the work sample: RCA section · SolarWinds NTA alert · BPDU Guard remediation</div>
+
+  <div class="legend">
+    <div class="leg"><div class="leg-dot start"></div>Trigger</div>
+    <div class="leg"><div class="leg-dot proc"></div>Response action</div>
+    <div class="leg"><div class="leg-dot dec"></div>Classification / decision</div>
+    <div class="leg"><div class="leg-dot ok"></div>Recovery / success</div>
+    <div class="leg"><div class="leg-dot err"></div>Escalation</div>
+    <div class="leg"><div class="leg-dot info"></div>Documentation / post-incident</div>
+  </div>
+
+  <div class="flow">
+    <!-- Detect -->
+    <div class="n n-start"><span class="n-icon">🚨</span><div class="n-title">Trigger: Incident Detected</div><div class="n-sub">SolarWinds threshold breach · user report · NOC alert</div></div>
+    <div class="conn"><div class="conn-line"></div><div class="conn-head"></div></div>
+    <!-- Example from real RCA -->
+    <div class="n n-teal" style="width:310px;"><span class="n-icon">📋</span><div class="n-title">Real Example: BPDU Storm</div><div class="n-sub">09:15 · SolarWinds NTA: VLAN 200 packet loss 3.2%  ←  VoIP call drops begin</div></div>
+    <div class="conn"><div class="conn-line"></div><div class="conn-head"></div></div>
+    <div class="n n-dec"><span class="n-icon">🏷️</span><div class="n-title">Severity Classification</div><div class="n-sub">P1 (all-hands) / P2 (on-call) / P3-P4 (queue)</div></div>
+  </div>
+
+  <!-- P1/P2 vs P3/P4 branch -->
+  <div class="branch-wrap">
+    <div class="conn short"><div class="conn-line"></div><div class="conn-head" style="opacity:0"></div></div>
+    <div class="split-bar" style="--bar-w:80%;"></div>
+    <div class="branches" style="width:80%;margin:0 auto">
+      <div class="branch-col">
+        <div class="swim-header swim-clinical">P1 / P2, Immediate</div>
+        <div class="n n-err"><div class="n-title">On-Call Engineer Paged</div><div class="n-sub">ServiceNow alert · 5 min response SLA</div></div>
+        <div class="conn short"><div class="conn-line"></div><div class="conn-head"></div></div>
+        <div class="n n-err"><div class="n-title">Leadership Notified (P1)</div><div class="n-sub">Network Lead + IT Director</div></div>
+      </div>
+      <div class="branch-col">
+        <div class="swim-header swim-guest">P3 / P4, Standard</div>
+        <div class="n n-teal"><div class="n-title">Team Queue</div><div class="n-sub">Next business day · standard ticket</div></div>
+      </div>
+    </div>
+    <div class="merge-bar" style="--bar-w:80%;"></div>
+    <div class="conn short"><div class="conn-line"></div><div class="conn-head"></div></div>
+  </div>
+
+  <div class="flow">
+    <div class="n n-proc" style="width:310px;"><span class="n-icon">🔬</span><div class="n-title">Problem Isolation</div><div class="n-sub">SolarWinds · NetFlow top-talker · CLI (show interface / show log) · Wireshark if needed</div></div>
+    <div class="conn"><div class="conn-line"></div><div class="conn-head"></div></div>
+    <div class="n n-teal" style="width:310px;"><span class="n-icon">🔦</span><div class="n-title">Root Cause Identified</div><div class="n-sub">09:35, Unmanaged switch from facilities created STP loop. BPDU Guard not enforced on port. Flooded VLAN 200.</div></div>
+    <div class="conn"><div class="conn-line"></div><div class="conn-head"></div></div>
+    <div class="n n-proc"><span class="n-icon">🔧</span><div class="n-title">Immediate Fix Applied</div><div class="n-sub">09:50, Port shut · BPDU Guard triggered · STP stabilized</div></div>
+    <div class="conn"><div class="conn-line"></div><div class="conn-head"></div></div>
+    <div class="n n-dec"><span class="n-icon">✅</span><div class="n-title">Validate: Service Restored?</div><div class="n-sub">Packet loss &lt; 0.05% · VoIP calls working · SolarWinds green</div></div>
+  </div>
+
+  <!-- Validate pass/escalate -->
+  <div class="branch-wrap">
+    <div class="conn short"><div class="conn-line"></div><div class="conn-head" style="opacity:0"></div></div>
+    <div class="split-bar" style="--bar-w:75%;"></div>
+    <div class="branches" style="width:75%;margin:0 auto">
+      <div class="branch-col">
+        <div class="swim-header swim-clinical">Restored ✓</div>
+        <div class="n n-ok"><div class="n-title">Incident Closed in ServiceNow</div><div class="n-sub">10:00 · resolution documented</div></div>
+      </div>
+      <div class="branch-col">
+        <div class="swim-header swim-biz">Not Restored</div>
+        <div class="n n-err"><div class="n-title">Escalate / Alternate Fix</div><div class="n-sub">Engage TAC · bridge call · DR if needed</div></div>
+      </div>
+    </div>
+    <div class="merge-bar" style="--bar-w:75%;"></div>
+    <div class="conn short"><div class="conn-line"></div><div class="conn-head"></div></div>
+  </div>
+
+  <div class="flow">
+    <div class="n n-info" style="width:310px;"><span class="n-icon">📄</span><div class="n-title">RCA Document Written (P1/P2)</div><div class="n-sub">5-Why analysis · timeline · contributing factors · impact</div></div>
+    <div class="conn"><div class="conn-line"></div><div class="conn-head"></div></div>
+    <div class="n n-info" style="width:310px;"><span class="n-icon">🛠️</span><div class="n-title">Corrective Actions (4-tier)</div><div class="n-sub">Immediate (same day) · Short-term (1 week) · Long-term (quarter) · Process update</div></div>
+    <div class="conn"><div class="conn-line"></div><div class="conn-head"></div></div>
+    <div class="n n-teal" style="width:320px;"><span class="n-icon">📢</span><div class="n-title">Real Example: Corrective Actions</div><div class="n-sub">BPDU Guard enabled globally via NCM script · ClearPass port-auto-shut policy · IDF physical security audit · NOC runbook updated</div></div>
+    <div class="conn"><div class="conn-line"></div><div class="conn-head"></div></div>
+    <div class="n n-end"><span class="n-icon">🛡️</span><div class="n-title">Monitoring Updated · Runbook Updated · Problem Cannot Recur</div></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- TAB 5: DR RUNBOOK                               -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="tab-panel" id="tab-dr">
+  <div class="panel-title">What Happens When the Core Switch Goes Down</div>
+  <div class="panel-desc">The exact steps from the moment SolarWinds fires a critical alert to the moment clinical systems are confirmed working and the P1 is closed. No guessing, no "we'll figure it out" : a tested runbook ready to execute at 2am.</div>
+  <div class="panel-from">🔗 From the work sample: DR Runbook section · Zoho quarterly DR switchovers (99.9% uptime) · Bright Horizons resilience testing</div>
+
+  <div class="legend">
+    <div class="leg"><div class="leg-dot start"></div>Alert / trigger</div>
+    <div class="leg"><div class="leg-dot proc"></div>Runbook action</div>
+    <div class="leg"><div class="leg-dot dec"></div>Diagnosis decision</div>
+    <div class="leg"><div class="leg-dot ok"></div>Recovery path</div>
+    <div class="leg"><div class="leg-dot info"></div>Communication / documentation</div>
+  </div>
+
+  <div class="flow">
+    <div class="n n-start"><span class="n-icon">🚨</span><div class="n-title">SolarWinds NPM: CRITICAL</div><div class="n-sub">Core-A-NEXUS-01 unreachable · multiple dependent nodes down</div></div>
+    <div class="conn"><div class="conn-line"></div><div class="conn-head"></div></div>
+    <div class="n n-err"><span class="n-icon">📟</span><div class="n-title">On-Call Engineer Paged</div><div class="n-sub">ServiceNow P1 incident auto-created · 5-minute response target</div></div>
+    <div class="conn"><div class="conn-line"></div><div class="conn-head"></div></div>
+
+    <!-- DETECT phase -->
+    <div class="n n-proc" style="width:310px;"><span class="n-icon">👁️</span><div class="n-title">DETECT, Physical + OOB Check</div><div class="n-sub">Console cable via OOB MGMT network · check LEDs · "show system resources" · "show version"</div></div>
+    <div class="conn"><div class="conn-line"></div><div class="conn-head"></div></div>
+
+    <!-- ISOLATE decision: HW vs SW -->
+    <div class="n n-dec" style="width:300px;"><span class="n-icon">🔎</span><div class="n-title">ISOLATE, Failure Type?</div><div class="n-sub">Hardware failure vs Software/process crash</div></div>
+  </div>
+
+  <!-- branch: software vs hardware -->
+  <div class="branch-wrap">
+    <div class="conn short"><div class="conn-line"></div><div class="conn-head" style="opacity:0"></div></div>
+    <div class="split-bar" style="--bar-w:90%;"></div>
+    <div class="branches" style="width:90%;margin:0 auto">
+
+      <div class="branch-col">
+        <div class="swim-header swim-guest">Software / Process Crash</div>
+        <div class="n n-proc"><div class="n-title">Identify Failed Process</div><div class="n-sub">"show processes cpu sort" · syslog check</div></div>
+        <div class="conn short"><div class="conn-line"></div><div class="conn-head"></div></div>
+        <div class="n n-ok"><div class="n-title">Restart Service / Reload Module</div><div class="n-sub">In-service restart if supported</div></div>
+        <div class="conn short"><div class="conn-line"></div><div class="conn-head"></div></div>
+        <div class="n n-ok"><div class="n-title">Restore from Backup Image</div><div class="n-sub">SolarWinds NCM last-known-good config</div></div>
+      </div>
+
+      <div class="branch-col">
+        <div class="swim-header swim-clinical">Hardware Failure</div>
+        <div class="n n-dec"><div class="n-title">Redundant Supervisor?</div><div class="n-sub">Is NSF/SSO configured?</div></div>
+        <div class="conn short"><div class="conn-line"></div><div class="conn-head"></div></div>
+        <!-- sub-branch: supervisor yes/no -->
+        <div class="branches" style="gap:0.5rem;">
+          <div class="branch-col">
+            <div class="swim-header swim-guest" style="font-size:0.6rem;">Yes, Auto-Failover</div>
+            <div class="n n-ok"><div class="n-title">NSF/SSO Kicks In</div><div class="n-sub">&lt;30 sec · zero downtime · log confirms sup switchover</div></div>
+          </div>
+          <div class="branch-col">
+            <div class="swim-header swim-biz" style="font-size:0.6rem;">No, Chassis Failure</div>
+            <div class="n n-proc"><div class="n-title">Stage DR Spare</div><div class="n-sub">Pre-racked Nexus 9508 in DR rack</div></div>
+            <div class="conn short"><div class="conn-line"></div><div class="conn-head"></div></div>
+            <div class="n n-proc"><div class="n-title">Load NCM Config</div><div class="n-sub">SCP from jump host · last nightly backup</div></div>
+            <div class="conn short"><div class="conn-line"></div><div class="conn-head"></div></div>
+            <div class="n n-proc"><div class="n-title">Reconnect Fiber Uplinks</div><div class="n-sub">IDF patch panel · label map in Visio</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="merge-bar" style="--bar-w:90%;"></div>
+    <div class="conn short"><div class="conn-line"></div><div class="conn-head"></div></div>
+  </div>
+
+  <div class="flow">
+    <!-- Verify routing -->
+    <div class="n n-proc" style="width:320px;"><span class="n-icon">🔁</span><div class="n-title">Verify Routing Adjacencies</div><div class="n-sub">"show ip ospf neighbor" · "show bgp summary" · all neighbors should re-establish within 5 min</div></div>
+    <div class="conn"><div class="conn-line"></div><div class="conn-head"></div></div>
+
+    <!-- Validate -->
+    <div class="n n-dec" style="width:320px;"><span class="n-icon">🧪</span><div class="n-title">VALIDATE</div><div class="n-sub">/scripts/validate-core.sh, ping all 20 critical server IPs · SolarWinds all-green?</div></div>
+    <div class="conn"><div class="conn-line"></div><div class="conn-head"></div></div>
+
+    <!-- Clinical confirm -->
+    <div class="n n-ok"><span class="n-icon">📞</span><div class="n-title">Confirm Clinical Access</div><div class="n-sub">Call charge nurses on each floor · "Is Epic working?"</div></div>
+    <div class="conn"><div class="conn-line"></div><div class="conn-head"></div></div>
+
+    <!-- Communication loop -->
+    <div class="n n-info" style="width:320px;"><span class="n-icon">📣</span><div class="n-title">COMMUNICATE, Every 15 min</div><div class="n-sub">Update ServiceNow P1 · notify Network Lead + IT Leadership · estimated restore time</div></div>
+    <div class="conn"><div class="conn-line"></div><div class="conn-head"></div></div>
+
+    <!-- Service restored -->
+    <div class="n n-ok"><span class="n-icon">✅</span><div class="n-title">Service Restored</div><div class="n-sub">RTO met (&lt;30 min target) · P1 closed in ServiceNow</div></div>
+    <div class="conn"><div class="conn-line"></div><div class="conn-head"></div></div>
+
+    <!-- RCA -->
+    <div class="n n-info" style="width:310px;"><span class="n-icon">📄</span><div class="n-title">RCA & Post-Incident Review</div><div class="n-sub">Within 48 hours · how to prevent recurrence · runbook updated</div></div>
+    <div class="conn"><div class="conn-line"></div><div class="conn-head"></div></div>
+
+    <div class="n n-end"><span class="n-icon">🏁</span><div class="n-title">Disaster Recovery Complete, Uptime Preserved</div></div>
+  </div>
+</div>
+
+<script>
+  function show(id, btn) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + id).classList.add('active');
+    btn.classList.add('active');
+  }
+</script>
+</body>
+</html>
