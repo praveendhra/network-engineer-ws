@@ -1146,8 +1146,10 @@ devices = [...]  <span class="cm"># loaded from IPAM / SolarWinds asset list</sp
   // Smooth scroll
   links.forEach(link => {
     link.addEventListener('click', e => {
+      const href = link.getAttribute('href');
+      if (!href || !href.startsWith('#')) return; // let external links navigate normally
       e.preventDefault();
-      const target = document.querySelector(link.getAttribute('href'));
+      const target = document.querySelector(href);
       if (target) target.scrollIntoView({ behavior: 'smooth' });
     });
   });
